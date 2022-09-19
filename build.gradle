@@ -1,0 +1,102 @@
+plugins {
+    id 'java'
+    id 'war' apply(true)
+    id 'io.swagger.core.v3.swagger-gradle-plugin' version '2.1.11' apply(true)
+}
+
+group 'io.trustody'
+version '1.0-SNAPSHOT'
+
+compileJava {
+    sourceCompatibility = 11
+    targetCompatibility = 11
+}
+
+repositories {
+    mavenLocal()
+    maven {
+        url = uri("https://maven.pkg.github.com/Ammer-Tech/custody-commons")
+        credentials {
+            username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+            password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
+        }
+    }
+    mavenCentral()
+}
+
+ext {
+    mqVersion = "2.0.0-RC1"
+    commonsVersion = "2.0.0-RC1"
+    mongodbVersion = "4.5.1"
+    morphiaVersion = "2.2.6"
+    rsApiVersion = "3.0.0"
+    jakartaVersion = "9.0.0"
+    hibernateVersion = "5.5.3.Final"
+    narayanaVersion = "5.9.2.Final"
+    xmlBindVersion = "2.3.2"
+    javaxValidationVersion = "2.0.1.Final"
+    nimbudsJwtVersion = "9.10"
+    mysqlVersion = "8.0.25"
+    nacosVersion = "2.0.2"
+    slf4jVersion="1.7.24"
+    mockitoVersion = "1.9.5"
+    jupiterVersion = "5.7.0"
+    wixMysqlVersion = "4.6.1"
+    lombokVersion="1.18.20"
+    jerseyVersion="3.0.2"
+}
+
+resolve {
+    outputFileName = 'api'
+    outputFormat = 'YAML'
+    prettyPrint = 'TRUE'
+    classpath = sourceSets.main.output + configurations.compileClasspath
+    resourcePackages = ['io.trustody.core.api']
+    outputDir = file('api-doc/')
+    buildClasspath = classpath
+}
+
+dependencies {
+    implementation group: 'jakarta.xml.bind', name: 'jakarta.xml.bind-api', version: "${xmlBindVersion}"
+    implementation group: 'javax.validation', name: 'validation-api', version: "${javaxValidationVersion}"
+    implementation group: 'mysql', name: 'mysql-connector-java', version: "${mysqlVersion}"
+    implementation group: 'ammer.tech', name: 'commons', version: "${commonsVersion}"
+
+    compileOnly group: 'jakarta.platform', name: 'jakarta.jakartaee-web-api', version: "${jakartaVersion}"
+    compileOnly group: 'jakarta.ws.rs', name: 'jakarta.ws.rs-api', version: "${rsApiVersion}"
+    compileOnly group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: "${nimbudsJwtVersion}"
+    compileOnly group: 'com.blockfeed',name: 'messaging-core', 'version':"${mqVersion}"
+    compileOnly group: 'org.slf4j', name :'slf4j-api','version':"${slf4jVersion}"
+    compileOnly group: 'org.slf4j', name :'slf4j-simple', 'version':"${slf4jVersion}"
+    compileOnly group: 'org.hibernate', name: 'hibernate-core', version: "${hibernateVersion}"
+    compileOnly group: 'org.jboss.narayana.jta', name: 'narayana-jta', version: "${narayanaVersion}"
+    compileOnly group: 'com.alibaba.nacos', name: 'nacos-client', version: "${nacosVersion}"
+    compileOnly group: 'org.flywaydb', name: 'flyway-core', version: '7.14.1'
+
+
+    testImplementation group: 'org.mockito', name:'mockito-core', version: "${mockitoVersion}"
+    testImplementation group: 'org.junit.jupiter', name:'junit-jupiter-api', version: "${jupiterVersion}"
+    testImplementation group: 'com.wix', name: 'wix-embedded-mysql', version: "$wixMysqlVersion"
+    testImplementation group: 'ammer.tech', name: 'commons', version:"${commonsVersion}"
+    testImplementation group: 'org.mockito', name: 'mockito-inline', version: '3.6.28'
+
+    testImplementation group: 'org.junit.jupiter', name:'junit-jupiter-engine', version: "${jupiterVersion}"
+    testImplementation group: 'jakarta.platform', name: 'jakarta.jakartaee-web-api', version: "${jakartaVersion}"
+    testImplementation group: 'jakarta.ws.rs', name: 'jakarta.ws.rs-api', version: "${rsApiVersion}"
+    testRuntimeOnly group: 'org.glassfish.jersey.core', name: 'jersey-server', version: "${jerseyVersion}"
+
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: "${lombokVersion}"
+    testCompileOnly group: 'org.projectlombok', name: 'lombok', version: "${lombokVersion}"
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: "${lombokVersion}"
+    testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: "${lombokVersion}"
+    // https://mvnrepository.com/artifact/de.flapdoodle.embed/de.flapdoodle.embed.mongo
+    testImplementation group: 'de.flapdoodle.embed', name: 'de.flapdoodle.embed.mongo', version: '3.4.9'
+
+
+    compileOnly 'io.swagger.core.v3:swagger-jaxrs2-jakarta:2.1.11'
+    compileOnly group: 'io.swagger.core.v3', name: 'swagger-jaxrs2-servlet-initializer-v2-jakarta', version: '2.1.11'
+}
+
+test {
+    useJUnitPlatform()
+}
