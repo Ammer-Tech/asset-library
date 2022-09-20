@@ -17,7 +17,7 @@ public class SmartAssetRepository implements AssetRepository<SmartAsset> {
                 Filters.ne("assetType", CodecTypes.NATIVE)
         );
 
-        return datastore.find("assets",Object.class).disableValidation()
+        return datastore.find("assets", Object.class).disableValidation()
                 .filter(f).iterator().toList().stream()
                 .map(o -> (SmartAsset) o).collect(Collectors.toList());
     }
@@ -29,7 +29,7 @@ public class SmartAssetRepository implements AssetRepository<SmartAsset> {
 
     @Override
     public SmartAsset upsertElement(SmartAsset element) {
-        if(element.getId() == null) element.setId(UUID.randomUUID());
+        if (element.getId() == null) element.setId(UUID.randomUUID());
         return datastore.save(element);
     }
 

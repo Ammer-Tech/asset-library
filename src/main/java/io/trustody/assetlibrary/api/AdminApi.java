@@ -1,6 +1,5 @@
 package io.trustody.assetlibrary.api;
 
-import ammer.tech.commons.ledger.entities.assets.BaseAsset;
 import ammer.tech.commons.ledger.entities.assets.Network;
 import ammer.tech.commons.ledger.entities.assets.SmartAsset;
 import com.jsoniter.JsonIterator;

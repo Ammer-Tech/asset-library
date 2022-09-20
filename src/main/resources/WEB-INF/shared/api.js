@@ -61,6 +61,12 @@ async function listNetworks()
 
 async function listAssets()
 {
-    //Use fetch api to get the list of all networks.
-    var res = await fetch();
+    const options = {method: 'GET'}
+    var res = await fetch('/api/public/networks/' + networkId + '/assets/smart-assets', options);
+    if(res.status !== 200){
+        alert('Could not fetch the list of networks!');
+        return;
+    }
+    var json = await res.json()
+    alert(json)
 }

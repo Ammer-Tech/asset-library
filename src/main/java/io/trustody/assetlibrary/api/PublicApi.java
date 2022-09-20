@@ -55,5 +55,4 @@ public class PublicApi {
     public Response getChanges(@QueryParam("startSequenceNumber") Long startSequenceNumber){
         return Response.noContent().build();
     }
-
 }
