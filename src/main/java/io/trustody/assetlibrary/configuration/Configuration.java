@@ -1,4 +1,16 @@
 package io.trustody.assetlibrary.configuration;
 
-public class Configuration {
+import ammer.tech.commons.configuration.ZMQServiceConfiguration;
+import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.ApplicationScoped;
+
+
+@ApplicationScoped
+public class Configuration extends ZMQServiceConfiguration {
+
+    @PostConstruct
+    public void init(){
+        this.buildConfiguration();
+    }
+
 }
