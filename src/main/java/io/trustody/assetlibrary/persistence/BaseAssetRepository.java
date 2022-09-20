@@ -22,6 +22,7 @@ public class BaseAssetRepository implements AssetRepository<BaseAsset> {
 
     @Override
     public BaseAsset upsertElement(BaseAsset element) {
+        if(element.getId() == null) element.setId(UUID.randomUUID());
         return datastore.save(element);
     }
 

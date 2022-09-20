@@ -21,6 +21,7 @@ public class NetworkRepository implements AssetRepository<Network> {
 
     @Override
     public Network upsertElement(Network element) {
+        if(element.getId() == null) element.setId(UUID.randomUUID());
         return datastore.save(element);
     }
 

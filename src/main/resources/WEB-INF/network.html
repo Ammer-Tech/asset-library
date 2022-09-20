@@ -1,0 +1,77 @@
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
+            crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+         $(document).ready(function(){
+            $('#header').load("shared/header.html");
+            $('#footer').load("footer.html");
+         });
+
+    </script>
+</head>
+<body>
+<div id="result" class="container-fluid">
+    <div id="header"></div>
+    <form id="result-form" class="container-fluid">
+        <div>
+            <label>ID</label>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" disabled="true" name="id" value="" id="id"
+                       required="required">
+            </div>
+            <label>Network ID</label>
+            <div class="input-group mb-3">
+                <input type="number" class="form-control" name="networkId" value="" id="networkId"
+                       step="1" required="required">
+            </div>
+            <label>Network Name</label>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" name="networkName" value="" id="networkName"
+                       required="required">
+            </div>
+            <label>Network Visible Name</label>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" name="visibleName" value="" id="visibleName"
+                       required="required">
+            </div>
+            <label>Icon url</label>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" name="iconUrl" value="" id="iconUrl"
+                       required="required">
+            </div>
+            <label>Explorer URI (transactions)</label>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" name="explorerTransactions" value=""
+                       id="explorerTransactions" required="required">
+            </div>
+            <label>Explorer URI (addresses)</label>
+            <div class="input-group mb-3"
+                 data-jsonform-type="text">
+                <input type="text" class="form-control" name="explorerAddress" value=""
+                       id="explorerAddress" required="required">
+            </div>
+            <label>Compatible public keys</label>
+            <div class="input-group mb-3">
+                <select class="form-control" name="compatiblePubKeys" value=""
+                        id="compatiblePubKeys" required="required">
+                    <option>EC256K1</option>
+                    <option>RSA4096</option>
+                    <option>ED4418</option>
+                </select>
+            </div>
+            <div class="input-group mb-3">
+                <div class="checkbox form-control"><label><input type="checkbox" id="visible" value="1"> Visible to
+                    clients </label></div>
+            </div>
+            <div class="button"><input type="submit" class="btn btn-primary " value="Save Network"></div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

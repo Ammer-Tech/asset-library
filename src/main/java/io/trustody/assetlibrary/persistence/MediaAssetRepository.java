@@ -21,6 +21,7 @@ public class MediaAssetRepository implements AssetRepository<MediaAsset> {
 
     @Override
     public MediaAsset upsertElement(MediaAsset element) {
+        if(element.getId() == null) element.setId(UUID.randomUUID());
         return datastore.save(element);
     }
 
