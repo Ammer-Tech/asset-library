@@ -6,13 +6,25 @@ import dev.morphia.query.experimental.filters.Filters;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class SmartAssetRepository implements AssetRepository<SmartAsset> {
 
     @Override
     public List<SmartAsset> listElements(UUID id) {
-        var f = Filters.and(Filters.eq("parent",id),Filters.eq("assetType", CodecTypes.ERC20));
-        return datastore.find(SmartAsset.class).filter(f).iterator().toList();
+        var f = Filters.and(
+                Filters.eq("parent", id),
+                Filters.ne("assetType", CodecTypes.NATIVE)
+        );
+
+        return datastore.find("assets",Object.class).disableValidation()
+                .filter(f).iterator().toList().stream()
+                .map(o -> (SmartAsset) o).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<SmartAsset> listElements() {
+        return null;
     }
 
     @Override

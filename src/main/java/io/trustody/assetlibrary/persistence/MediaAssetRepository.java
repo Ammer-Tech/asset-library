@@ -1,6 +1,5 @@
 package io.trustody.assetlibrary.persistence;
 
-import ammer.tech.commons.blockchain.l2codecs.CodecTypes;
 import ammer.tech.commons.ledger.entities.assets.MediaAsset;
 import dev.morphia.query.experimental.filters.Filters;
 
@@ -11,10 +10,13 @@ public class MediaAssetRepository implements AssetRepository<MediaAsset> {
 
     @Override
     public List<MediaAsset> listElements(UUID id) {
-        var f = Filters.and(Filters.eq("parent", id),
-                Filters.or(Filters.eq("codecType", CodecTypes.ERC721), Filters.eq("assetType", CodecTypes.ERC1155))
-        );
+        var f = Filters.eq("parent", id);
         return datastore.find(MediaAsset.class).filter(f).iterator().toList();
+    }
+
+    @Override
+    public List<MediaAsset> listElements() {
+        return null;
     }
 
     @Override

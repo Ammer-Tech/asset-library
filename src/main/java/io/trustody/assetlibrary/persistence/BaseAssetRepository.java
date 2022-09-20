@@ -16,6 +16,11 @@ public class BaseAssetRepository implements AssetRepository<BaseAsset> {
     }
 
     @Override
+    public List<BaseAsset> listElements() {
+        return null;
+    }
+
+    @Override
     public BaseAsset upsertElement(BaseAsset element) {
         return datastore.save(element);
     }

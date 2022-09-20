@@ -2,13 +2,12 @@ package io.trustody.assetlibrary.persistence;
 
 import ammer.tech.commons.blockchain.l2codecs.CodecTypes;
 import ammer.tech.commons.ledger.entities.assets.BaseAsset;
+import ammer.tech.commons.ledger.entities.assets.MediaAsset;
+import ammer.tech.commons.ledger.entities.assets.SmartAsset;
 import ammer.tech.commons.persistence.mongodb.codecs.BigIntegerCodec;
-import com.jsoniter.output.JsonStream;
 import com.mongodb.ConnectionString;
-import com.mongodb.MongoClientOptions;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoDriverInformation;
-import com.mongodb.client.MongoClient;
 import com.mongodb.client.internal.MongoClientImpl;
 import de.flapdoodle.embed.mongo.MongodExecutable;
 import de.flapdoodle.embed.mongo.MongodStarter;
@@ -21,22 +20,21 @@ import dev.morphia.Morphia;
 import dev.morphia.mapping.MapperOptions;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.UuidRepresentation;
-import org.bson.codecs.BigDecimalCodec;
-import org.bson.codecs.UuidCodec;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigInteger;
+import java.util.List;
 import java.util.UUID;
 
 import static io.trustody.assetlibrary.AssetServer.datastore;
-import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
-class BaseAssetRepositoryTest {
+class RepositoryRepositoryTest {
 
     private static MongodExecutable mongodExecutable;
 
@@ -71,11 +69,30 @@ class BaseAssetRepositoryTest {
     @Test
     public void testRepo(){
         UUID parentId = UUID.randomUUID();
+        ammer.tech.commons.ledger.entities.assets.Network network = new ammer.tech.commons.ledger.entities.assets.Network();
+        network.setNetworkId(1293L);
+        network.setId(parentId);
+        network.setNetworkName("Ethereum Random Network");
+        NetworkRepository networkRepository = new NetworkRepository();
+        networkRepository.upsertElement(network);
+        List<ammer.tech.commons.ledger.entities.assets.Network> networkList = networkRepository.listElements();
+        Assertions.assertEquals(1,networkList.size());
         BaseAssetRepository baseAssetRepository = new BaseAssetRepository();
         baseAssetRepository.upsertElement( BaseAsset.builder().assetType(CodecTypes.NATIVE).id(UUID.randomUUID())
                 .feeUnits(BigInteger.ONE).parent(parentId).build());
-        var l = baseAssetRepository.listElements(parentId);
-        log.info(JsonStream.serialize(l));
+        var l1 = baseAssetRepository.listElements(parentId);
+        Assertions.assertEquals(1,l1.size());
+        //Check the case when we want to get a smart asset and a media asset.
+        SmartAsset smartAsset = SmartAsset.builder().assetType(CodecTypes.ERC20).parent(parentId).id(UUID.randomUUID())
+                .feeUnits(BigInteger.ONE).build();
+        MediaAsset mediaAsset = MediaAsset.builder().assetType(CodecTypes.ERC721).parent(parentId).id(UUID.randomUUID())
+                .feeUnits(BigInteger.TEN).build();
+        SmartAssetRepository smartAssetRepository = new SmartAssetRepository();
+        MediaAssetRepository mediaAssetRepository = new MediaAssetRepository();
+        smartAssetRepository.upsertElement(smartAsset);
+        mediaAssetRepository.upsertElement(mediaAsset);
+        List<SmartAsset> l2 = smartAssetRepository.listElements(parentId);
+        Assertions.assertEquals(2,l2.size());
     }
 
     @AfterAll

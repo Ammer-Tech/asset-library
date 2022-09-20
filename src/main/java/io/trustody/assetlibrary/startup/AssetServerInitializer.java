@@ -4,7 +4,6 @@ import ammer.tech.commons.persistence.mongodb.codecs.BigIntegerCodec;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoDriverInformation;
-import com.mongodb.client.MongoClients;
 import com.mongodb.client.internal.MongoClientImpl;
 import dev.morphia.Morphia;
 import dev.morphia.mapping.MapperOptions;
@@ -21,7 +20,10 @@ public class AssetServerInitializer implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         ServletContextListener.super.contextInitialized(sce);
-        CodecRegistry codecRegistry = CodecRegistries.fromRegistries(com.mongodb.MongoClient.getDefaultCodecRegistry(),CodecRegistries.fromCodecs(new BigIntegerCodec()));
+        CodecRegistry codecRegistry = CodecRegistries.fromRegistries(
+                com.mongodb.MongoClient.getDefaultCodecRegistry(),
+                CodecRegistries.fromCodecs(new BigIntegerCodec())
+        );
         MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
                 .uuidRepresentation(UuidRepresentation.JAVA_LEGACY)
                 .codecRegistry(codecRegistry)
