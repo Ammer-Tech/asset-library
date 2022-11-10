@@ -7,12 +7,13 @@
             integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
             crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="shared/api.js"></script>
     <script>
          $(document).ready(function(){
             $('#header').load("shared/header.html");
             $('#footer').load("footer.html");
+            $('#mediaTable').load("media-extension.html");
          });
-
     </script>
 </head>
 <body>
@@ -21,100 +22,92 @@
     <form id="result-form" class="container-fluid">
         <div>
             <div class="input mb-3 form-control" data-jsonform-type="text">
-                <label class="control-label" for="jsonform-82-elt-address">Smart Contract</label>
+                <label class="control-label" for="jsonform-82-elt-id">Asset ID</label>
+                <input type="text" class="form-control" disabled="true" name="id" value="" id="jsonform-82-elt-id"
+                       required="required">
+            </div>
+            <div class="input mb-3 form-control" data-jsonform-type="text">
+                <label class="control-label" for="jsonform-82-elt-parent">Network ID</label>
+                <select type="text" class="form-control" name="parent" value="" id="jsonform-82-elt-parent"
+                       required="required">
+                    <option>Ethereum</option>
+                    <option>Polygon</option>
+                </select>
+            </div>
+            <div class="input mb-3 form-control" data-jsonform-type="text">
+                <label class="control-label" for="jsonform-82-elt-address">Smart Contract Address</label>
                 <input type="text" class="form-control" name="address" value="" id="jsonform-82-elt-address"
-                                             required="required">
+                       required="required">
             </div>
             <div class="input mb-3 form-control" data-jsonform-type="text">
                 <label class="control-label" for="jsonform-82-elt-visibleName">Visible Name</label>
                 <input class="form-control" type="text" name="visibleName" value=""
-                                             id="jsonform-82-elt-visibleName" required="required">
+                       id="jsonform-82-elt-visibleName" required="required">
             </div>
-            <div class="d-flex justify-content-md-around form-control">
-            <div class="input mb-3" data-jsonform-type="text">
-                <label class="control-label" for="jsonform-82-elt-displayFactor">Display Factor</label>
-                <input type="number" class="form-control" name="displayFactor" value=""
-                                             id="jsonform-82-elt-displayFactor" step="1" required="required"><span
-                        class="help-block jsonform-errortext" style="display:none;"></span>
-            </div>
-            <div class="input mb-3" data-jsonform-type="text">
-                <label class="control-label" for="jsonform-82-elt-decimalSeparator">Decimal Separator</label>
-                <input type="number" class="form-control" name="decimalSeparator" value=""
-                                             id="jsonform-82-elt-decimalSeparator" step="1" required="required"><span
-                        class="help-block jsonform-errortext" style="display:none;"></span>
-            </div>
+            <div class="d-flex mb-3 justify-content-md-around form-control">
                 <div class="input mb-3" data-jsonform-type="text">
-                <label class="control-label" for="jsonform-82-elt-symbol">Symbol</label>
-                <input type="text" class="form-control" name="symbol" value="" id="jsonform-82-elt-symbol"
-                                             required="required"><span class="help-block jsonform-errortext"
-                                                                       style="display:none;"></span>
-            </div>
+                    <label class="control-label" for="jsonform-82-elt-displayFactor">Display Factor</label>
+                    <input type="number" class="form-control" name="displayFactor" value=""
+                           id="jsonform-82-elt-displayFactor" step="1" required="required">
+                </div>
                 <div class="input mb-3" data-jsonform-type="text">
-                 <label class="control-label" for="jsonform-82-elt-assetType">Asset
-                Type</label>
-                <input type="text" class="form-control" name="assetType" value=""
-                                             id="jsonform-82-elt-assetType" required="required"><span
-                        class="help-block jsonform-errortext" style="display:none;"></span>
-            </div>
+                    <label class="control-label" for="jsonform-82-elt-decimalSeparator">Decimal Separator</label>
+                    <input type="number" class="form-control" name="decimalSeparator" value=""
+                           id="jsonform-82-elt-decimalSeparator" step="1" required="required">
+                </div>
+                <div class="input mb-3" data-jsonform-type="text">
+                    <label class="control-label" for="jsonform-82-elt-symbol">Symbol</label>
+                    <input type="text" class="form-control" name="symbol" value="" id="jsonform-82-elt-symbol"
+                           required="required">
+                </div>
+                <div class="input mb-3" data-jsonform-type="text">
+                    <label class="control-label" for="jsonform-82-elt-assetType">Asset Type</label>
+                    <input type="text" class="form-control" name="assetType" value="" id="jsonform-82-elt-assetType"
+                           required="required">
+                </div>
             </div>
             <div class="input mb-3 form-control" data-jsonform-type="text">
                 <label class="control-label" for="jsonform-82-elt-visible">Visible</label>
-                    <label><input  type="checkbox" id="jsonform-82-elt-visible" name="visible"
-                                                        value="1"><span></span></label>
+                <input type="checkbox" id="jsonform-82-elt-visible" name="visible" value="1"><span></span>
             </div>
             <div class="input mb-3 form-control" data-jsonform-type="text">
                 <label class="control-label" for="jsonform-82-elt-description">Description</label>
-                <input type="text" class="form-control" name="description" value=""
-                                             id="jsonform-82-elt-description" required="required">
+                <input type="text" class="form-control" name="description" value="" id="jsonform-82-elt-description"
+                       required="required">
             </div>
-            <div class="control-group jsonform-node jsonform-error-feeEnabled" data-jsonform-type="checkbox"><label
-                    class="control-label" for="jsonform-82-elt-feeEnabled">Can pay fee</label>
-                <div class="controls">
-                    <div class="checkbox"><label><input type="checkbox" id="jsonform-82-elt-feeEnabled"
-                                                        name="feeEnabled" value="1"><span></span></label></div>
-                    <span class="help-block jsonform-errortext" style="display:none;"></span></div>
+            <div class="d-flex mb-3 justify-content-md-around form-control">
+                <div class="input mb-3" data-jsonform-type="text">
+                    <label class="control-label" for="jsonform-82-elt-feeEnabled">Can pay fee</label>
+                    <input type="checkbox" id="jsonform-82-elt-feeEnabled" name="feeEnabled" value="1">
+                </div>
+                <div class="input mb-3" data-jsonform-type="text">
+                    <label class="control-label" for="jsonform-82-elt-feeUnits">Fee Units</label>
+                    <input type="number" class="form-control" name="feeUnits" value=""
+                           id="jsonform-82-elt-feeUnits" step="1" required="required">
+                </div>
             </div>
-            <div class="control-group jsonform-node jsonform-error-feeUnits jsonform-required"
-                 data-jsonform-type="number"><label class="control-label" for="jsonform-82-elt-feeUnits">Fee
-                Units</label>
-                <div class="controls"><input type="number" class="" name="feeUnits" value=""
-                                             id="jsonform-82-elt-feeUnits" step="1" required="required"><span
-                        class="help-block jsonform-errortext" style="display:none;"></span></div>
+            <div class="form-control mb-3">
+                <div class="input mb-3" data-jsonform-type="text">
+                    <label class="control-label" for="jsonform-82-elt-genericLogoUrl">Generic Logo URI</label>
+                    <input type="text" class="form-control" name="genericLogoUrl" value=""
+                           id="jsonform-82-elt-genericLogoUrl" required="required">
+                </div>
+                <div class="input mb-3" data-jsonform-type="text">
+                    <label class="control-label" for="jsonform-82-elt-androidLogoUrl">Android Logo URI</label>
+                    <input type="text" class="form-control" name="androidLogoUrl" value=""
+                           id="jsonform-82-elt-androidLogoUrl" required="required">
+                </div>
+                <div class="input mb-3" data-jsonform-type="text">
+                    <label class="control-label" for="jsonform-82-elt-iOSLogoUrl">iOS Logo URI</label>
+                    <input type="text" class="form-control" name="iOSLogoUrl" value="" id="jsonform-82-elt-iOSLogoUrl"
+                           required="required">
+                </div>
             </div>
-            <div class="control-group jsonform-node jsonform-error-genericLogoUrl jsonform-required"
-                 data-jsonform-type="text"><label class="control-label" for="jsonform-82-elt-genericLogoUrl">Generic
-                Logo URI</label>
-                <div class="controls"><input type="text" class="" name="genericLogoUrl" value=""
-                                             id="jsonform-82-elt-genericLogoUrl" required="required"><span
-                        class="help-block jsonform-errortext" style="display:none;"></span></div>
+            <div id="mediaTable"></div>
+            <div class="input mb-3">
+                <button class="btn btn-success" value="Submit">Submit</button>
+                <button class="btn btn-warning" value="Add new token">Add new token entry</button>
             </div>
-            <div class="control-group jsonform-node jsonform-error-androidLogoUrl jsonform-required"
-                 data-jsonform-type="text"><label class="control-label" for="jsonform-82-elt-androidLogoUrl">Android
-                Logo URI</label>
-                <div class="controls"><input type="text" class="" name="androidLogoUrl" value=""
-                                             id="jsonform-82-elt-androidLogoUrl" required="required"><span
-                        class="help-block jsonform-errortext" style="display:none;"></span></div>
-            </div>
-            <div class="control-group jsonform-node jsonform-error-iOSLogoUrl jsonform-required"
-                 data-jsonform-type="text"><label class="control-label" for="jsonform-82-elt-iOSLogoUrl">iOS Logo
-                URI</label>
-                <div class="controls"><input type="text" class="" name="iOSLogoUrl" value=""
-                                             id="jsonform-82-elt-iOSLogoUrl" required="required"><span
-                        class="help-block jsonform-errortext" style="display:none;"></span></div>
-            </div>
-            <div class="control-group jsonform-node jsonform-error-id jsonform-required" data-jsonform-type="text">
-                <label class="control-label" for="jsonform-82-elt-id">Asset ID</label>
-                <div class="controls"><input type="text" class="" name="id" value="" id="jsonform-82-elt-id"
-                                             required="required"><span class="help-block jsonform-errortext"
-                                                                       style="display:none;"></span></div>
-            </div>
-            <div class="control-group jsonform-node jsonform-error-parent jsonform-required" data-jsonform-type="text">
-                <label class="control-label" for="jsonform-82-elt-parent">Network ID</label>
-                <div class="controls"><input type="text" class="" name="parent" value="" id="jsonform-82-elt-parent"
-                                             required="required"><span class="help-block jsonform-errortext"
-                                                                       style="display:none;"></span></div>
-            </div>
-            <div class="form-actions "><input type="submit" class="btn btn-primary " value="Submit"></div>
         </div>
     </form>
 </div>

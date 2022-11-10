@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static io.trustody.assetlibrary.AssetServer.datastore;
+import static java.util.UUID.randomUUID;
 
 @Slf4j
 class RepositoryRepositoryTest {
@@ -68,7 +69,7 @@ class RepositoryRepositoryTest {
 
     @Test
     public void testRepo(){
-        UUID parentId = UUID.randomUUID();
+        UUID parentId = randomUUID();
         ammer.tech.commons.ledger.entities.assets.Network network = new ammer.tech.commons.ledger.entities.assets.Network();
         network.setNetworkId(1293L);
         network.setId(parentId);
@@ -78,14 +79,15 @@ class RepositoryRepositoryTest {
         List<ammer.tech.commons.ledger.entities.assets.Network> networkList = networkRepository.listElements();
         Assertions.assertEquals(1,networkList.size());
         BaseAssetRepository baseAssetRepository = new BaseAssetRepository();
-        baseAssetRepository.upsertElement( BaseAsset.builder().assetType(CodecTypes.NATIVE).id(UUID.randomUUID())
+        baseAssetRepository.upsertElement( BaseAsset.builder().assetType(CodecTypes.NATIVE).id(randomUUID())
                 .feeUnits(BigInteger.ONE).parent(parentId).build());
         var l1 = baseAssetRepository.listElements(parentId);
         Assertions.assertEquals(1,l1.size());
         //Check the case when we want to get a smart asset and a media asset.
-        SmartAsset smartAsset = SmartAsset.builder().assetType(CodecTypes.ERC20).parent(parentId).id(UUID.randomUUID())
+        SmartAsset smartAsset = SmartAsset.builder().assetType(CodecTypes.ERC20).parent(parentId).id(randomUUID())
                 .feeUnits(BigInteger.ONE).build();
-        MediaAsset mediaAsset = MediaAsset.builder().assetType(CodecTypes.ERC721).parent(parentId).id(UUID.randomUUID())
+        UUID mediaId = UUID.randomUUID();
+        MediaAsset mediaAsset = MediaAsset.builder().assetType(CodecTypes.ERC721).parent(parentId).id(mediaId)
                 .feeUnits(BigInteger.TEN).build();
         SmartAssetRepository smartAssetRepository = new SmartAssetRepository();
         MediaAssetRepository mediaAssetRepository = new MediaAssetRepository();
@@ -93,6 +95,12 @@ class RepositoryRepositoryTest {
         mediaAssetRepository.upsertElement(mediaAsset);
         List<SmartAsset> l2 = smartAssetRepository.listElements(parentId);
         Assertions.assertEquals(2,l2.size());
+        //Now try to delete an asset based on the uuid.
+        SmartAsset smartAsset1 = new SmartAsset();
+        smartAsset1.setId(mediaId);
+        smartAssetRepository.deleteElement(smartAsset1);
+        List<SmartAsset> l3 = smartAssetRepository.listElements(parentId);
+        Assertions.assertEquals(1,l3.size());
     }
 
     @AfterAll

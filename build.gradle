@@ -25,12 +25,13 @@ repositories {
 }
 
 ext {
-    mqVersion = "2.0.0-RC1"
-    commonsVersion = "2.0.0-RC1"
+    mqVersion = "2.0.1-RC1"
+    commonsVersion = "2.0.4-RC1"
     mongodbVersion = "4.5.1"
     morphiaVersion = "2.2.6"
     rsApiVersion = "3.0.0"
-    jakartaVersion = "9.0.0"
+    jakartaVersion = "9.1.0"
+    microprofileVersion = "5.0"
     hibernateVersion = "5.5.3.Final"
     narayanaVersion = "5.9.2.Final"
     xmlBindVersion = "2.3.2"
@@ -38,7 +39,7 @@ ext {
     nimbudsJwtVersion = "9.10"
     mysqlVersion = "8.0.25"
     nacosVersion = "2.0.2"
-    slf4jVersion="1.7.24"
+    slf4jVersion="2.0.3"
     mockitoVersion = "1.9.5"
     jupiterVersion = "5.7.0"
     wixMysqlVersion = "4.6.1"
@@ -62,8 +63,9 @@ dependencies {
     implementation group: 'mysql', name: 'mysql-connector-java', version: "${mysqlVersion}"
     implementation group: 'ammer.tech', name: 'commons', version: "${commonsVersion}"
 
-    compileOnly group: 'jakarta.platform', name: 'jakarta.jakartaee-web-api', version: "${jakartaVersion}"
-    compileOnly group: 'jakarta.ws.rs', name: 'jakarta.ws.rs-api', version: "${rsApiVersion}"
+    providedCompile group: 'jakarta.platform', name: 'jakarta.jakartaee-api', version: "${jakartaVersion}"
+    providedCompile group: 'org.eclipse.microprofile', name: "microprofile", version: "${microprofileVersion}"
+
     compileOnly group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: "${nimbudsJwtVersion}"
     compileOnly group: 'com.blockfeed',name: 'messaging-core', 'version':"${mqVersion}"
     compileOnly group: 'org.slf4j', name :'slf4j-api','version':"${slf4jVersion}"

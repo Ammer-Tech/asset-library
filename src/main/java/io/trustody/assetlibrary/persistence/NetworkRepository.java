@@ -1,7 +1,11 @@
 package io.trustody.assetlibrary.persistence;
 
 import ammer.tech.commons.ledger.entities.assets.Network;
+import com.jsoniter.output.JsonStream;
+import io.trustody.assetlibrary.incremental.ChangeEvent;
+import io.trustody.assetlibrary.incremental.EventQueueController;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 import java.util.List;
 import java.util.UUID;
@@ -9,6 +13,8 @@ import java.util.UUID;
 @ApplicationScoped
 public class NetworkRepository implements AssetRepository<Network> {
 
+    @Inject
+    private EventQueueController eventQueueController;
     @Override
     public List<Network> listElements(UUID id) {
         return null;
@@ -22,11 +28,23 @@ public class NetworkRepository implements AssetRepository<Network> {
     @Override
     public Network upsertElement(Network element) {
         if(element.getId() == null) element.setId(UUID.randomUUID());
-        return datastore.save(element);
+        var x = datastore.save(element);
+        eventQueueController.storeChangeEvent(ChangeEvent.builder()
+                .networkChange(true).codecType(null)
+                .objectId(element.getId()).deleted(false).changeData(JsonStream.serialize(x)).build()
+        );
+        return x;
     }
 
     @Override
     public boolean deleteElement(Network element) {
-        return datastore.delete(element).getDeletedCount() == 1;
+        if(datastore.delete(element).getDeletedCount() == 1){
+            eventQueueController.storeChangeEvent(ChangeEvent.builder()
+                    .networkChange(true).codecType(null)
+                    .objectId(element.getId()).deleted(true).changeData(null).build()
+            );
+            return true;
+        }
+        return false;
     }
 }
