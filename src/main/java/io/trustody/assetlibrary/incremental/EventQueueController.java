@@ -17,7 +17,9 @@ public class EventQueueController {
     }
 
     public List<AssetChangeEvent> getEvents(long startSequence){
-        return null;
+        long endSequence = publisher.getEventQueue().getSequenceNumber();
+        if(endSequence >= startSequence) return List.of();
+        return publisher.getEventQueue().getMessageBuffer().getElements(startSequence,endSequence);
     }
 
 
