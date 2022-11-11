@@ -1,5 +1,6 @@
 package io.trustody.assetlibrary.api;
 
+import ammer.tech.commons.blockchain.l2codecs.CodecTypes;
 import com.jsoniter.output.JsonStream;
 import io.trustody.assetlibrary.incremental.EventQueueController;
 import io.trustody.assetlibrary.persistence.BaseAssetRepository;
@@ -57,5 +58,11 @@ public class PublicApi {
     @Path("/changes")
     public Response getChanges(@QueryParam("startSequenceNumber") Long startSequenceNumber){
         return Response.ok(JsonStream.serialize(eventQueueController.getEvents(startSequenceNumber))).build();
+    }
+
+    @GET
+    @Path("/getSupportedCodecs")
+    public Response getSupportedCodecs(){
+        return Response.ok(JsonStream.serialize(CodecTypes.values())).build();
     }
 }
