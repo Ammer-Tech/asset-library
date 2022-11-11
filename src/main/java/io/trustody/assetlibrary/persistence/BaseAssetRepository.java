@@ -2,9 +2,9 @@ package io.trustody.assetlibrary.persistence;
 
 import ammer.tech.commons.blockchain.l2codecs.CodecTypes;
 import ammer.tech.commons.ledger.entities.assets.BaseAsset;
+import ammer.tech.commons.ledger.events.AssetChangeEvent;
 import com.jsoniter.output.JsonStream;
 import dev.morphia.query.experimental.filters.Filters;
-import io.trustody.assetlibrary.incremental.ChangeEvent;
 import io.trustody.assetlibrary.incremental.EventQueueController;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -32,7 +32,7 @@ public class BaseAssetRepository implements AssetRepository<BaseAsset> {
     public BaseAsset upsertElement(BaseAsset element) {
         if(element.getId() == null) element.setId(UUID.randomUUID());
         var x = datastore.save(element);
-        eventQueueController.storeChangeEvent(ChangeEvent.builder()
+        eventQueueController.storeChangeEvent(AssetChangeEvent.builder()
                 .networkChange(false).codecType(CodecTypes.NATIVE)
                 .objectId(element.getId()).deleted(false).changeData(JsonStream.serialize(x)).build()
         );
@@ -42,7 +42,7 @@ public class BaseAssetRepository implements AssetRepository<BaseAsset> {
     @Override
     public boolean deleteElement(BaseAsset element) {
         if(datastore.delete(element).getDeletedCount() == 1){
-            eventQueueController.storeChangeEvent(ChangeEvent.builder()
+            eventQueueController.storeChangeEvent(AssetChangeEvent.builder()
                     .networkChange(false).codecType(CodecTypes.NATIVE)
                     .objectId(element.getId()).deleted(true).changeData(null).build()
             );

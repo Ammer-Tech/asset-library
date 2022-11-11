@@ -1,6 +1,7 @@
 package io.trustody.assetlibrary.api;
 
 import com.jsoniter.output.JsonStream;
+import io.trustody.assetlibrary.incremental.EventQueueController;
 import io.trustody.assetlibrary.persistence.BaseAssetRepository;
 import io.trustody.assetlibrary.persistence.MediaAssetRepository;
 import io.trustody.assetlibrary.persistence.NetworkRepository;
@@ -25,6 +26,8 @@ public class PublicApi {
     private MediaAssetRepository mediaAssetRepository;
     @Inject
     private NetworkRepository networkRepository;
+    @Inject
+    private EventQueueController eventQueueController;
 
     @GET
     @Path("/networks")
@@ -53,6 +56,6 @@ public class PublicApi {
     @GET
     @Path("/changes")
     public Response getChanges(@QueryParam("startSequenceNumber") Long startSequenceNumber){
-        return Response.noContent().build();
+        return Response.ok(JsonStream.serialize(eventQueueController.getEvents(startSequenceNumber))).build();
     }
 }
