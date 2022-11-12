@@ -56,7 +56,7 @@ resolve {
     outputFormat = 'YAML'
     prettyPrint = 'TRUE'
     classpath = sourceSets.main.output + configurations.compileClasspath
-    resourcePackages = ['io.trustody.core.api']
+    resourcePackages = ['io.trustody.assetlibrary']
     outputDir = file('api-doc/')
     buildClasspath = classpath
 }

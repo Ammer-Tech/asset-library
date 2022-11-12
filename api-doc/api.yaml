@@ -1,0 +1,384 @@
+openapi: 3.0.1
+paths:
+  /api/admin/asset:
+    put:
+      summary: Сreate an asset entry
+      operationId: appendAsset
+      requestBody:
+        description: Network entry
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BaseAsset'
+      responses:
+        "200":
+          description: Successful creation of a request for signature
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseAsset'
+        "500":
+          description: Server-side processing error
+        "401":
+          description: Unauthorized
+  /api/admin/network:
+    put:
+      summary: Сreate a network entry
+      operationId: appendNetwork
+      requestBody:
+        description: Network entry
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Network'
+      responses:
+        "200":
+          description: Successful creation of a request for signature
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Network'
+        "500":
+          description: Server-side processing error
+        "401":
+          description: Unauthorized
+  /api/admin/assets/{assetId}:
+    delete:
+      operationId: deleteAsset
+      parameters:
+      - name: assetId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        default:
+          description: default response
+          content:
+            '*/*': {}
+  /api/admin/networks/{networkId}:
+    delete:
+      operationId: deleteNetwork
+      parameters:
+      - name: networkId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        default:
+          description: default response
+          content:
+            '*/*': {}
+  /api/public/networks/{networkId}/assets/native:
+    get:
+      summary: Get all native coins
+      operationId: getAssets
+      parameters:
+      - name: networkId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Get all native coins
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BaseAsset'
+        "500":
+          description: Server-side processing error
+  /api/public/changes:
+    get:
+      summary: Get all changes starting from a sequence number
+      operationId: getChanges
+      parameters:
+      - name: startSequenceNumber
+        in: query
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: List of all changes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AssetChangeEvent'
+        "500":
+          description: Server-side processing error
+  /api/public/networks/{networkId}/assets/media-assets:
+    get:
+      summary: Get all media assets
+      operationId: getMediaAssets
+      parameters:
+      - name: networkId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: List of all media assets
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MediaAsset'
+        "500":
+          description: Server-side processing error
+  /api/public/networks:
+    get:
+      summary: Get all networks
+      operationId: getNetworks
+      responses:
+        "200":
+          description: List of all networks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Network'
+        "500":
+          description: Server-side processing error
+  /api/public/networks/{networkId}/assets/smart-assets:
+    get:
+      summary: Get all smart assets
+      operationId: getSmartAssets
+      parameters:
+      - name: networkId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: List of all smart assets
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SmartAsset'
+        "500":
+          description: Server-side processing error
+  /api/public/getSupportedCodecs:
+    get:
+      summary: Get all codecs which exist
+      operationId: getSupportedCodecs
+      responses:
+        "200":
+          description: List of all codecs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  enum:
+                  - NATIVE
+                  - ERC20
+                  - ERC721
+                  - ERC1155
+        "500":
+          description: Server-side processing error
+components:
+  schemas:
+    BaseAsset:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        parent:
+          type: string
+          format: uuid
+        displayFactor:
+          type: integer
+        decimalSeparator:
+          type: integer
+        symbol:
+          type: string
+        assetType:
+          type: string
+          enum:
+          - NATIVE
+          - ERC20
+          - ERC721
+          - ERC1155
+        visibleName:
+          type: string
+        visible:
+          type: boolean
+        description:
+          type: string
+        feeEnabled:
+          type: boolean
+        feeUnits:
+          type: integer
+        genericLogoUrl:
+          type: string
+        androidLogoUrl:
+          type: string
+        ioslogoUrl:
+          type: string
+    Network:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        parent:
+          type: string
+          format: uuid
+        networkId:
+          type: integer
+          format: int64
+        networkName:
+          type: string
+        visibleName:
+          type: string
+        iconUrl:
+          type: string
+        explorerTransactions:
+          type: string
+        explorerAddress:
+          type: string
+        compatiblePubKeys:
+          type: array
+          items:
+            type: string
+            enum:
+            - EC256K1
+            - RSA4096
+            - Ed25519
+        visible:
+          type: boolean
+    AssetChangeEvent:
+      type: object
+      properties:
+        sequenceNumber:
+          type: integer
+          format: int64
+        uuid:
+          type: string
+          format: uuid
+        topic:
+          type: string
+        timestamp:
+          type: integer
+          format: int64
+        needsReply:
+          type: boolean
+        networkChange:
+          type: boolean
+        codecType:
+          type: string
+          enum:
+          - NATIVE
+          - ERC20
+          - ERC721
+          - ERC1155
+        objectId:
+          type: string
+          format: uuid
+        deleted:
+          type: boolean
+        changeData:
+          type: string
+    MediaAsset:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        parent:
+          type: string
+          format: uuid
+        displayFactor:
+          type: integer
+        decimalSeparator:
+          type: integer
+        symbol:
+          type: string
+        assetType:
+          type: string
+          enum:
+          - NATIVE
+          - ERC20
+          - ERC721
+          - ERC1155
+        visibleName:
+          type: string
+        visible:
+          type: boolean
+        description:
+          type: string
+        feeEnabled:
+          type: boolean
+        feeUnits:
+          type: integer
+        genericLogoUrl:
+          type: string
+        androidLogoUrl:
+          type: string
+        address:
+          type: string
+        tokenId:
+          type: integer
+          format: int64
+        mediaUrl:
+          type: string
+        mediaType:
+          type: string
+        mediaDescription:
+          type: string
+        ioslogoUrl:
+          type: string
+    SmartAsset:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        parent:
+          type: string
+          format: uuid
+        displayFactor:
+          type: integer
+        decimalSeparator:
+          type: integer
+        symbol:
+          type: string
+        assetType:
+          type: string
+          enum:
+          - NATIVE
+          - ERC20
+          - ERC721
+          - ERC1155
+        visibleName:
+          type: string
+        visible:
+          type: boolean
+        description:
+          type: string
+        feeEnabled:
+          type: boolean
+        feeUnits:
+          type: integer
+        genericLogoUrl:
+          type: string
+        androidLogoUrl:
+          type: string
+        address:
+          type: string
+        ioslogoUrl:
+          type: string

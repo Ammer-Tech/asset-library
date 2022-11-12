@@ -6,6 +6,11 @@ import ammer.tech.commons.ledger.entities.assets.Network;
 import ammer.tech.commons.ledger.entities.assets.SmartAsset;
 import com.jsoniter.JsonIterator;
 import com.jsoniter.output.JsonStream;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.trustody.assetlibrary.persistence.BaseAssetRepository;
 import io.trustody.assetlibrary.persistence.MediaAssetRepository;
 import io.trustody.assetlibrary.persistence.NetworkRepository;
@@ -36,6 +41,13 @@ public class AdminApi {
 
     @PUT
     @Path("/network")
+    @Operation(summary = "Сreate a network entry",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Network entry", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Network.class))),
+            responses = {
+                    @ApiResponse(description = "Successful creation of a request for signature", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Network.class))),
+                    @ApiResponse(description = "Server-side processing error", responseCode = "500"),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401"),
+            })
     public Response appendNetwork(@RequestBody String body) throws Exception {
         Network network = JsonIterator.deserialize(body, Network.class);
         return Response.ok(JsonStream.serialize(networkRepository.upsertElement(network))).build();
@@ -51,6 +63,13 @@ public class AdminApi {
 
     @PUT
     @Path("/asset")
+    @Operation(summary = "Сreate an asset entry",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Network entry", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BaseAsset.class))),
+            responses = {
+                    @ApiResponse(description = "Successful creation of a request for signature", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BaseAsset.class))),
+                    @ApiResponse(description = "Server-side processing error", responseCode = "500"),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401"),
+            })
     public Response appendAsset(@Context HttpServletRequest request) throws Exception {
         byte[] objectBytes = request.getInputStream().readAllBytes();
         BaseAsset baseAsset = JsonIterator.deserialize(objectBytes, BaseAsset.class);
