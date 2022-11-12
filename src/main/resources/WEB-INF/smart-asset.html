@@ -12,7 +12,7 @@
          $(document).ready(function(){
             $('#header').load("shared/header.html");
             $('#footer').load("footer.html");
-            $('#mediaTable').load("media-extension.html");
+            $('#mediaTableHolder').load("media-extension.html");
          });
 
     </script>
@@ -97,13 +97,14 @@
                     <input type="text" class="form-control" name="iOSLogoUrl" value="" id="jsonform-82-elt-iOSLogoUrl">
                 </div>
             </div>
-            <div id="mediaTable"></div>
+            <div id="mediaTableHolder"></div>
             <div class="input mb-3">
                 <button class="btn btn-success" value="Submit">Submit</button>
-                <button class="btn btn-warning" value="Add new token" onclick="addField();">Add new token entry</button>
+                <button type="button" class="btn btn-warning" value="Add new token" onclick="createCell(); return false;">Add new token entry</button>
             </div>
         </div>
     </form>
 </div>
+<script src="shared/table-utils.js"></script>
 </body>
 </html>

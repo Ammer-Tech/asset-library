@@ -12,8 +12,9 @@
          $(document).ready(function(){
             $('#header').load("shared/header.html");
             $('#footer').load("footer.html");
-            $('#mediaTable').load("media-extension.html");
+            $('#mediaTableHolder').load("media-extension.html");
          });
+
     </script>
 </head>
 <body>
@@ -23,47 +24,42 @@
         <div>
             <div class="input mb-3 form-control" data-jsonform-type="text">
                 <label class="control-label" for="jsonform-82-elt-id">Asset ID</label>
-                <input type="text" class="form-control" disabled="true" name="id" value="" id="jsonform-82-elt-id"
-                       required="required">
+                <input type="text" class="form-control" disabled="true" name="id" value="" id="jsonform-82-elt-id">
             </div>
             <div class="input mb-3 form-control" data-jsonform-type="text">
                 <label class="control-label" for="jsonform-82-elt-parent">Network ID</label>
-                <select type="text" class="form-control" name="parent" value="" id="jsonform-82-elt-parent"
-                       required="required">
+                <select type="text" class="form-control" name="parent" value="" id="jsonform-82-elt-parent">
                     <option>Ethereum</option>
                     <option>Polygon</option>
                 </select>
             </div>
             <div class="input mb-3 form-control" data-jsonform-type="text">
                 <label class="control-label" for="jsonform-82-elt-address">Smart Contract Address</label>
-                <input type="text" class="form-control" name="address" value="" id="jsonform-82-elt-address"
-                       required="required">
+                <input type="text" class="form-control" name="address" value="" id="jsonform-82-elt-address">
             </div>
             <div class="input mb-3 form-control" data-jsonform-type="text">
                 <label class="control-label" for="jsonform-82-elt-visibleName">Visible Name</label>
                 <input class="form-control" type="text" name="visibleName" value=""
-                       id="jsonform-82-elt-visibleName" required="required">
+                       id="jsonform-82-elt-visibleName">
             </div>
             <div class="d-flex mb-3 justify-content-md-around form-control">
                 <div class="input mb-3" data-jsonform-type="text">
                     <label class="control-label" for="jsonform-82-elt-displayFactor">Display Factor</label>
                     <input type="number" class="form-control" name="displayFactor" value=""
-                           id="jsonform-82-elt-displayFactor" step="1" required="required">
+                           id="jsonform-82-elt-displayFactor" step="1">
                 </div>
                 <div class="input mb-3" data-jsonform-type="text">
                     <label class="control-label" for="jsonform-82-elt-decimalSeparator">Decimal Separator</label>
                     <input type="number" class="form-control" name="decimalSeparator" value=""
-                           id="jsonform-82-elt-decimalSeparator" step="1" required="required">
+                           id="jsonform-82-elt-decimalSeparator" step="1">
                 </div>
                 <div class="input mb-3" data-jsonform-type="text">
                     <label class="control-label" for="jsonform-82-elt-symbol">Symbol</label>
-                    <input type="text" class="form-control" name="symbol" value="" id="jsonform-82-elt-symbol"
-                           required="required">
+                    <input type="text" class="form-control" name="symbol" value="" id="jsonform-82-elt-symbol">
                 </div>
                 <div class="input mb-3" data-jsonform-type="text">
                     <label class="control-label" for="jsonform-82-elt-assetType">Asset Type</label>
-                    <input type="text" class="form-control" name="assetType" value="" id="jsonform-82-elt-assetType"
-                           required="required">
+                    <input type="text" class="form-control" name="assetType" value="" id="jsonform-82-elt-assetType">
                 </div>
             </div>
             <div class="input mb-3 form-control" data-jsonform-type="text">
@@ -72,8 +68,7 @@
             </div>
             <div class="input mb-3 form-control" data-jsonform-type="text">
                 <label class="control-label" for="jsonform-82-elt-description">Description</label>
-                <input type="text" class="form-control" name="description" value="" id="jsonform-82-elt-description"
-                       required="required">
+                <input type="text" class="form-control" name="description" value="" id="jsonform-82-elt-description">
             </div>
             <div class="d-flex mb-3 justify-content-md-around form-control">
                 <div class="input mb-3" data-jsonform-type="text">
@@ -83,33 +78,33 @@
                 <div class="input mb-3" data-jsonform-type="text">
                     <label class="control-label" for="jsonform-82-elt-feeUnits">Fee Units</label>
                     <input type="number" class="form-control" name="feeUnits" value=""
-                           id="jsonform-82-elt-feeUnits" step="1" required="required">
+                           id="jsonform-82-elt-feeUnits" step="1">
                 </div>
             </div>
             <div class="form-control mb-3">
                 <div class="input mb-3" data-jsonform-type="text">
                     <label class="control-label" for="jsonform-82-elt-genericLogoUrl">Generic Logo URI</label>
                     <input type="text" class="form-control" name="genericLogoUrl" value=""
-                           id="jsonform-82-elt-genericLogoUrl" required="required">
+                           id="jsonform-82-elt-genericLogoUrl">
                 </div>
                 <div class="input mb-3" data-jsonform-type="text">
                     <label class="control-label" for="jsonform-82-elt-androidLogoUrl">Android Logo URI</label>
                     <input type="text" class="form-control" name="androidLogoUrl" value=""
-                           id="jsonform-82-elt-androidLogoUrl" required="required">
+                           id="jsonform-82-elt-androidLogoUrl">
                 </div>
                 <div class="input mb-3" data-jsonform-type="text">
                     <label class="control-label" for="jsonform-82-elt-iOSLogoUrl">iOS Logo URI</label>
-                    <input type="text" class="form-control" name="iOSLogoUrl" value="" id="jsonform-82-elt-iOSLogoUrl"
-                           required="required">
+                    <input type="text" class="form-control" name="iOSLogoUrl" value="" id="jsonform-82-elt-iOSLogoUrl">
                 </div>
             </div>
-            <div id="mediaTable"></div>
+            <div id="mediaTableHolder"></div>
             <div class="input mb-3">
                 <button class="btn btn-success" value="Submit">Submit</button>
-                <button class="btn btn-warning" value="Add new token">Add new token entry</button>
+                <button type="button" class="btn btn-warning" value="Add new token" onclick="createCell(); return false;">Add new token entry</button>
             </div>
         </div>
     </form>
 </div>
+<script src="shared/table-utils.js"></script>
 </body>
 </html>
