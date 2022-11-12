@@ -1,7 +1,6 @@
 package io.trustody.assetlibrary.startup;
 
 import ammer.tech.commons.persistence.mongodb.codecs.BigIntegerCodec;
-import com.jsoniter.output.JsonStream;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoDriverInformation;
@@ -35,17 +34,34 @@ public class AssetServerInitializer implements ServletContextListener {
                 CodecRegistries.fromCodecs(new BigIntegerCodec())
         );
         log.info("Mongo Registry Loaded...");
-        MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
-                .uuidRepresentation(UuidRepresentation.JAVA_LEGACY)
-                .codecRegistry(codecRegistry)
-                .applyConnectionString(new ConnectionString("mongodb://" +
-                        configuration.getMongoDBConfiguration().getUsername() + ":" + configuration.getMongoDBConfiguration().getPassword()
-                        + "@" + configuration.getMongoDBConfiguration().getServerAddress() + ":" + configuration.getMongoDBConfiguration().getPort()
-                        + "/" + configuration.getMongoDBConfiguration().getDbName()))
-                .build();
-        log.info("Mongo Connection Established...");
-        MongoDriverInformation mongoDriverInformation = MongoDriverInformation.builder().build();
-        var mc = new MongoClientImpl(mongoClientSettings,mongoDriverInformation);
+        MongoClientImpl mc;
+        /*
+        try {
+            MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
+                    .uuidRepresentation(UuidRepresentation.JAVA_LEGACY)
+                    .codecRegistry(codecRegistry)
+                    .applyConnectionString(new ConnectionString("mongodb://" +
+                            configuration.getMongoDBConfiguration().getUsername() + ":" + configuration.getMongoDBConfiguration().getPassword()
+                            + "@" + configuration.getMongoDBConfiguration().getServerAddress() + ":" + configuration.getMongoDBConfiguration().getPort()
+                            + "/" + configuration.getMongoDBConfiguration().getDbName()))
+                    .build();
+            MongoDriverInformation mongoDriverInformation = MongoDriverInformation.builder().build();
+            mc  = new MongoClientImpl(mongoClientSettings, mongoDriverInformation);
+            log.info("Could not open a secure channel!");
+        }
+        catch (Exception e){
+
+         */
+            log.info("Could not open secure channel - opening plain.");
+            MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
+                    .uuidRepresentation(UuidRepresentation.JAVA_LEGACY)
+                    .codecRegistry(codecRegistry)
+                    .applyConnectionString(new ConnectionString("mongodb://" + configuration.getMongoDBConfiguration().getServerAddress() + ":" + configuration.getMongoDBConfiguration().getPort()
+                            + "/" + configuration.getMongoDBConfiguration().getDbName()))
+                    .build();
+            MongoDriverInformation mongoDriverInformation = MongoDriverInformation.builder().build();
+            mc = new MongoClientImpl(mongoClientSettings, mongoDriverInformation);
+
         datastore = Morphia.createDatastore(mc, "assets", MapperOptions.builder().build());
         datastore.getMapper().mapPackage("ammer.tech.commons.ledger.entities.assets");
         datastore.ensureIndexes();
