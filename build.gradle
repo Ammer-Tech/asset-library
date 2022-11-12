@@ -47,6 +47,10 @@ ext {
     jerseyVersion="3.0.2"
 }
 
+war{
+    archiveFileName = "assets.war"
+}
+
 resolve {
     outputFileName = 'api'
     outputFormat = 'YAML'

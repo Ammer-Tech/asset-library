@@ -9,6 +9,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 public class Configuration extends ZMQServiceConfiguration {
     @PostConstruct
     public void init(){
-        this.buildConfiguration();
+        super.buildConfiguration();
     }
 }

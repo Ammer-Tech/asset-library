@@ -7,13 +7,13 @@ import io.trustody.assetlibrary.persistence.BaseAssetRepository;
 import io.trustody.assetlibrary.persistence.MediaAssetRepository;
 import io.trustody.assetlibrary.persistence.NetworkRepository;
 import io.trustody.assetlibrary.persistence.SmartAssetRepository;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Response;
 
-import javax.inject.Inject;
 import java.util.UUID;
 
 @Path("/api/public")
