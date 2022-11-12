@@ -61,7 +61,7 @@ dependencies {
     implementation group: 'jakarta.xml.bind', name: 'jakarta.xml.bind-api', version: "${xmlBindVersion}"
     implementation group: 'javax.validation', name: 'validation-api', version: "${javaxValidationVersion}"
     implementation group: 'mysql', name: 'mysql-connector-java', version: "${mysqlVersion}"
-    implementation group: 'ammer.tech', name: 'commons', version: "${commonsVersion}"
+    compileOnly group: 'ammer.tech', name: 'commons', version: "${commonsVersion}"
 
     providedCompile group: 'jakarta.platform', name: 'jakarta.jakartaee-api', version: "${jakartaVersion}"
     providedCompile group: 'org.eclipse.microprofile', name: "microprofile", version: "${microprofileVersion}"
