@@ -18,6 +18,7 @@ import de.flapdoodle.embed.mongo.distribution.Version;
 import de.flapdoodle.embed.process.runtime.Network;
 import dev.morphia.Morphia;
 import dev.morphia.mapping.MapperOptions;
+import io.trustody.assetlibrary.incremental.EventQueueController;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.UuidRepresentation;
 import org.bson.codecs.configuration.CodecRegistries;
@@ -75,10 +76,13 @@ class RepositoryRepositoryTest {
         network.setId(parentId);
         network.setNetworkName("Ethereum Random Network");
         NetworkRepository networkRepository = new NetworkRepository();
+        networkRepository.setEventQueueController(new EventQueueController());
         networkRepository.upsertElement(network);
+        networkRepository.setEventQueueController(new EventQueueController());
         List<ammer.tech.commons.ledger.entities.assets.Network> networkList = networkRepository.listElements();
         Assertions.assertEquals(1,networkList.size());
         BaseAssetRepository baseAssetRepository = new BaseAssetRepository();
+        baseAssetRepository.setEventQueueController(new EventQueueController());
         baseAssetRepository.upsertElement( BaseAsset.builder().assetType(CodecTypes.NATIVE).id(randomUUID())
                 .feeUnits(BigInteger.ONE).parent(parentId).build());
         var l1 = baseAssetRepository.listElements(parentId);
@@ -91,6 +95,8 @@ class RepositoryRepositoryTest {
                 .feeUnits(BigInteger.TEN).build();
         SmartAssetRepository smartAssetRepository = new SmartAssetRepository();
         MediaAssetRepository mediaAssetRepository = new MediaAssetRepository();
+        smartAssetRepository.setEventQueueController(new EventQueueController());
+        mediaAssetRepository.setEventQueueController(new EventQueueController());
         smartAssetRepository.upsertElement(smartAsset);
         mediaAssetRepository.upsertElement(mediaAsset);
         List<SmartAsset> l2 = smartAssetRepository.listElements(parentId);

@@ -89,6 +89,7 @@ dependencies {
     testImplementation group: 'org.junit.jupiter', name:'junit-jupiter-engine', version: "${jupiterVersion}"
     testImplementation group: 'jakarta.platform', name: 'jakarta.jakartaee-web-api', version: "${jakartaVersion}"
     testImplementation group: 'jakarta.ws.rs', name: 'jakarta.ws.rs-api', version: "${rsApiVersion}"
+    testImplementation group: 'com.blockfeed',name: 'messaging-core', 'version':"${mqVersion}"
     testRuntimeOnly group: 'org.glassfish.jersey.core', name: 'jersey-server', version: "${jerseyVersion}"
 
     compileOnly group: 'org.projectlombok', name: 'lombok', version: "${lombokVersion}"

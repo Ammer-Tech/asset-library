@@ -13,7 +13,8 @@ public class EventQueueController {
     private QueuePublisher publisher;
 
     public synchronized void storeChangeEvent(AssetChangeEvent changeEvent){
-        publisher.getEventQueue().publish(changeEvent);
+        return;
+        //publisher.getEventQueue().publish(changeEvent);
     }
 
     public List<AssetChangeEvent> getEvents(long startSequence){

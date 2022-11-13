@@ -8,6 +8,7 @@ import dev.morphia.query.experimental.filters.Filters;
 import io.trustody.assetlibrary.incremental.EventQueueController;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import lombok.Setter;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,6 +17,7 @@ import java.util.UUID;
 public class BaseAssetRepository implements AssetRepository<BaseAsset> {
 
     @Inject
+    @Setter
     private EventQueueController eventQueueController;
     @Override
     public List<BaseAsset> listElements(UUID id) {

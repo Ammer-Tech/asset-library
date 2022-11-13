@@ -6,6 +6,7 @@ import com.jsoniter.output.JsonStream;
 import io.trustody.assetlibrary.incremental.EventQueueController;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import lombok.Setter;
 
 import java.util.List;
 import java.util.UUID;
@@ -14,6 +15,7 @@ import java.util.UUID;
 public class NetworkRepository implements AssetRepository<Network> {
 
     @Inject
+    @Setter
     private EventQueueController eventQueueController;
     @Override
     public List<Network> listElements(UUID id) {

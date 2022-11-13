@@ -7,6 +7,10 @@
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
 .idea/**/shelf
+buid/
+api-doc/
+.gradle/
+gradle
 
 # AWS User-specific
 .idea/**/aws.xml
