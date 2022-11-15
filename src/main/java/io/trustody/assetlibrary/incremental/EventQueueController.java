@@ -12,9 +12,9 @@ public class EventQueueController {
     @Inject
     private QueuePublisher publisher;
 
-    public synchronized void storeChangeEvent(AssetChangeEvent changeEvent){
-        return;
-        //publisher.getEventQueue().publish(changeEvent);
+    public void storeChangeEvent(AssetChangeEvent changeEvent){
+        changeEvent.setTopic("ASSET_CHANGE");
+        publisher.getEventQueue().publish(changeEvent);
     }
 
     public List<AssetChangeEvent> getEvents(long startSequence){

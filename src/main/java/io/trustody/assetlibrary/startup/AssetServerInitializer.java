@@ -1,6 +1,12 @@
 package io.trustody.assetlibrary.startup;
 
+import ammer.tech.commons.ledger.codec.UUIDCodec;
 import ammer.tech.commons.persistence.mongodb.codecs.BigIntegerCodec;
+import com.jsoniter.JsonIterator;
+import com.jsoniter.output.EncodingMode;
+import com.jsoniter.output.JsonStream;
+import com.jsoniter.spi.DecodingMode;
+import com.jsoniter.spi.JsoniterSpi;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoDriverInformation;
@@ -16,6 +22,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.bson.UuidRepresentation;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
+import org.flywaydb.core.Flyway;
+
+import java.util.UUID;
 
 import static io.trustody.assetlibrary.AssetServer.datastore;
 
@@ -29,6 +38,12 @@ public class AssetServerInitializer implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
+        JsoniterSpi.registerTypeEncoder(UUID.class, new UUIDCodec());
+        JsoniterSpi.registerTypeDecoder(UUID.class, new UUIDCodec());
+        JsoniterSpi.registerMapKeyDecoder(UUID.class, new UUIDCodec());
+        JsoniterSpi.registerMapKeyEncoder(UUID.class, new UUIDCodec());
+        JsonIterator.setMode(DecodingMode.DYNAMIC_MODE_AND_MATCH_FIELD_WITH_HASH);
+        JsonStream.setMode(EncodingMode.DYNAMIC_MODE);
         CodecRegistry codecRegistry = CodecRegistries.fromRegistries(
                 com.mongodb.MongoClient.getDefaultCodecRegistry(),
                 CodecRegistries.fromCodecs(new BigIntegerCodec())
@@ -54,7 +69,7 @@ public class AssetServerInitializer implements ServletContextListener {
          */
             log.info("Could not open secure channel - opening plain.");
             MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
-                    .uuidRepresentation(UuidRepresentation.JAVA_LEGACY)
+                    .uuidRepresentation(UuidRepresentation.STANDARD)
                     .codecRegistry(codecRegistry)
                     .applyConnectionString(new ConnectionString("mongodb://" + configuration.getMongoDBConfiguration().getServerAddress() + ":" + configuration.getMongoDBConfiguration().getPort()
                             + "/" + configuration.getMongoDBConfiguration().getDbName()))
@@ -65,6 +80,15 @@ public class AssetServerInitializer implements ServletContextListener {
         datastore = Morphia.createDatastore(mc, "assets", MapperOptions.builder().build());
         datastore.getMapper().mapPackage("ammer.tech.commons.ledger.entities.assets");
         datastore.ensureIndexes();
+        Flyway flyway = Flyway.configure().baselineOnMigrate(true)
+                .dataSource(configuration.getMessageQueuePersistence().getHibernateConfiguration().get("hibernate.connection.url"),
+                        configuration.getMessageQueuePersistence().getHibernateConfiguration().get("hibernate.connection.username"),
+                        configuration.getMessageQueuePersistence().getHibernateConfiguration().get("hibernate.connection.password")
+                ).load();
+        flyway.migrate();
+        com.blockfeed.messaging.core.extra.persistence.PersistenceService.init(configuration.getMessageQueuePersistence().getHibernateClasses(),
+                configuration.getMessageQueuePersistence().getHibernateConfiguration());
+        log.info("Completed flyway migrations");
         log.info("Asset server started succesfully!");
     }
 }

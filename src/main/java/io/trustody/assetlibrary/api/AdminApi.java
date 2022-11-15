@@ -75,6 +75,7 @@ public class AdminApi {
         switch (baseAsset.getAssetType()) {
             case NATIVE:
                 baseAssetRepository.upsertElement(baseAsset);
+                break;
             case ERC20:
                 SmartAsset asset0 = JsonIterator.deserialize(objectBytes,SmartAsset.class);
                 smartAssetRepository.upsertElement(asset0);

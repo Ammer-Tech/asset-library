@@ -8,6 +8,7 @@ import io.trustody.assetlibrary.incremental.EventQueueController;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import lombok.Setter;
+import org.bouncycastle.asn1.DERSequence;
 
 import java.util.List;
 import java.util.UUID;
@@ -34,10 +35,15 @@ public class MediaAssetRepository implements AssetRepository<MediaAsset> {
     public MediaAsset upsertElement(MediaAsset element) {
         if(element.getId() == null) element.setId(UUID.randomUUID());
         var x = datastore.save(element);
-        eventQueueController.storeChangeEvent(AssetChangeEvent.builder()
-                .networkChange(false).codecType(x.getAssetType())
-                .objectId(element.getId()).deleted(false).changeData(JsonStream.serialize(x)).build()
-        );
+        try {
+            eventQueueController.storeChangeEvent(AssetChangeEvent.builder()
+                    .networkChange(false).codecType(x.getAssetType())
+                    .objectId(element.getId()).deleted(false).changeData(new DERSequence(x.encodeToVector()).getEncoded()).build()
+            );
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
         return x;
     }
 
