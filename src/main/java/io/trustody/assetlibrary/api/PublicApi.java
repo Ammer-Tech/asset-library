@@ -154,10 +154,10 @@ public class PublicApi {
                             content = @Content(
                                     mediaType = "application/json",
                                     array = @ArraySchema(
-                                            schema = @Schema(implementation = CodecTypes.class))
+                                            schema = @Schema(implementation = PublicKeyType.class))
                             )
                     ),
-                    @ApiResponse(description = "Server-side processing error", PublicKeyType = "500"),
+                    @ApiResponse(description = "Server-side processing error", responseCode = "500"),
             })
     public Response getSupportedPublicKeys(){
         return Response.ok(JsonStream.serialize(PublicKeyType.values())).build();
