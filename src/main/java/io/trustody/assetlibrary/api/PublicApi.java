@@ -1,6 +1,7 @@
 package io.trustody.assetlibrary.api;
 
 import ammer.tech.commons.blockchain.l2codecs.CodecTypes;
+import ammer.tech.commons.ledger.entities.accounts.PublicKeyType;
 import ammer.tech.commons.ledger.entities.assets.BaseAsset;
 import ammer.tech.commons.ledger.entities.assets.MediaAsset;
 import ammer.tech.commons.ledger.entities.assets.Network;
@@ -23,10 +24,12 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Response;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.UUID;
 
 @Path("/api/public")
+@Slf4j
 public class PublicApi {
 
     @Inject
@@ -122,6 +125,7 @@ public class PublicApi {
                     @ApiResponse(description = "Server-side processing error", responseCode = "500"),
             })
     public Response getChanges(@QueryParam("startSequenceNumber") Long startSequenceNumber){
+        System.out.println("Received request with start number " + startSequenceNumber);
         return Response.ok(JsonStream.serialize(eventQueueController.getEvents(startSequenceNumber))).build();
     }
 
@@ -141,4 +145,22 @@ public class PublicApi {
     public Response getSupportedCodecs(){
         return Response.ok(JsonStream.serialize(CodecTypes.values())).build();
     }
+
+    @GET
+    @Path("/getSupportedPublicKeys")
+    @Operation(summary = "Get all codecs which exist",
+            responses = {
+                    @ApiResponse(description = "List of all codecs", responseCode = "200",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(
+                                            schema = @Schema(implementation = CodecTypes.class))
+                            )
+                    ),
+                    @ApiResponse(description = "Server-side processing error", PublicKeyType = "500"),
+            })
+    public Response getSupportedPublicKeys(){
+        return Response.ok(JsonStream.serialize(PublicKeyType.values())).build();
+    }
+
 }

@@ -3,12 +3,10 @@ package io.trustody.assetlibrary.persistence;
 import ammer.tech.commons.blockchain.l2codecs.CodecTypes;
 import ammer.tech.commons.ledger.entities.assets.SmartAsset;
 import ammer.tech.commons.ledger.events.AssetChangeEvent;
-import com.jsoniter.output.JsonStream;
 import dev.morphia.query.experimental.filters.Filters;
 import io.trustody.assetlibrary.incremental.EventQueueController;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import lombok.Setter;
 import org.bouncycastle.asn1.DERSequence;
 
 import java.util.List;
@@ -19,7 +17,6 @@ import java.util.stream.Collectors;
 public class SmartAssetRepository implements AssetRepository<SmartAsset> {
 
     @Inject
-    @Setter
     private EventQueueController eventQueueController;
     @Override
     public List<SmartAsset> listElements(UUID id) {
