@@ -1,7 +1,7 @@
 plugins {
     id 'java'
     id 'war' apply(true)
-    id 'io.swagger.core.v3.swagger-gradle-plugin' version '2.1.11' apply(true)
+    id("io.smallrye.openapi") version '3.1.0-SNAPSHOT' apply(true)
 }
 
 group 'io.trustody'
@@ -51,20 +51,15 @@ war{
     archiveFileName = "assets.war"
 }
 
-resolve {
-    outputFileName = 'api'
-    outputFormat = 'YAML'
-    prettyPrint = 'TRUE'
-    classpath = sourceSets.main.output + configurations.compileClasspath
-    resourcePackages = ['io.trustody.assetlibrary']
-    outputDir = file('api-doc/')
-    buildClasspath = classpath
-}
+
 
 dependencies {
     implementation group: 'jakarta.xml.bind', name: 'jakarta.xml.bind-api', version: "${xmlBindVersion}"
     implementation group: 'javax.validation', name: 'validation-api', version: "${javaxValidationVersion}"
     implementation group: 'mysql', name: 'mysql-connector-java', version: "${mysqlVersion}"
+    implementation 'org.eclipse.microprofile.openapi:microprofile-openapi-api:2.0.0'
+    implementation 'org.projectnessie.smallrye-open-api:org.projectnessie.smallrye-open-api.gradle.plugin:0.2.13'
+
     compileOnly group: 'ammer.tech', name: 'commons', version: "${commonsVersion}"
 
     providedCompile group: 'jakarta.platform', name: 'jakarta.jakartaee-api', version: "${jakartaVersion}"
@@ -98,10 +93,6 @@ dependencies {
     testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: "${lombokVersion}"
     // https://mvnrepository.com/artifact/de.flapdoodle.embed/de.flapdoodle.embed.mongo
     testImplementation group: 'de.flapdoodle.embed', name: 'de.flapdoodle.embed.mongo', version: '3.4.9'
-
-
-    compileOnly 'io.swagger.core.v3:swagger-jaxrs2-jakarta:2.1.11'
-    compileOnly group: 'io.swagger.core.v3', name: 'swagger-jaxrs2-servlet-initializer-v2-jakarta', version: '2.1.11'
 }
 
 test {

@@ -6,14 +6,11 @@ import ammer.tech.commons.ledger.entities.assets.Network;
 import ammer.tech.commons.ledger.entities.assets.SmartAsset;
 import com.jsoniter.JsonIterator;
 import com.jsoniter.output.JsonStream;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.trustody.assetlibrary.persistence.BaseAssetRepository;
 import io.trustody.assetlibrary.persistence.MediaAssetRepository;
 import io.trustody.assetlibrary.persistence.NetworkRepository;
 import io.trustody.assetlibrary.persistence.SmartAssetRepository;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.DELETE;
@@ -22,11 +19,23 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
+import org.eclipse.microprofile.metrics.annotation.Timed;
+import org.eclipse.microprofile.openapi.annotations.OpenAPIDefinition;
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.info.Info;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
+import org.eclipse.microprofile.openapi.annotations.parameters.RequestBodySchema;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 import java.util.UUID;
 
+@RequestScoped
 @Path("/api/admin")
+@OpenAPIDefinition(info = @Info(title="Greeting API", version = "1.0.0"))
+@Tag(name = "Config Retrieval service", description = "Get the value for a certain config")
 public class AdminApi {
 
     @Inject
@@ -40,13 +49,9 @@ public class AdminApi {
 
     @PUT
     @Path("/network")
-    @Operation(summary = "Сreate a network entry",
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Network entry", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Network.class))),
-            responses = {
-                    @ApiResponse(description = "Successful creation of a request for signature", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Network.class))),
-                    @ApiResponse(description = "Server-side processing error", responseCode = "500"),
-                    @ApiResponse(description = "Unauthorized", responseCode = "401"),
-            })
+    @Operation(summary = "Finds Pets by status", description = "Multiple status values can be provided with comma separated strings")
+    @RequestBodySchema(Network.class)
+    @APIResponse(description = "Successful creation of a request for signature", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Network.class)))
     public Response appendNetwork(@RequestBody String body) throws Exception {
         Network network = JsonIterator.deserialize(body, Network.class);
         return Response.ok(JsonStream.serialize(networkRepository.upsertElement(network))).build();
@@ -62,13 +67,6 @@ public class AdminApi {
 
     @PUT
     @Path("/asset")
-    @Operation(summary = "Сreate an asset entry",
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Network entry", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BaseAsset.class))),
-            responses = {
-                    @ApiResponse(description = "Successful creation of a request for signature", responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BaseAsset.class))),
-                    @ApiResponse(description = "Server-side processing error", responseCode = "500"),
-                    @ApiResponse(description = "Unauthorized", responseCode = "401"),
-            })
     public Response appendAsset(@Context HttpServletRequest request) throws Exception {
         byte[] objectBytes = request.getInputStream().readAllBytes();
         BaseAsset baseAsset = JsonIterator.deserialize(objectBytes, BaseAsset.class);
