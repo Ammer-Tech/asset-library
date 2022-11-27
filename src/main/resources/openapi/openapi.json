@@ -19,20 +19,28 @@
   } ],
   "paths" : {
     "/assets/api/admin/asset" : {
-      "put" : {
+      "post" : {
         "tags" : [ "Config Retrieval service" ],
+        "summary" : "Create/Modify an Asset",
         "requestBody" : {
           "content" : {
-            "application/json" : {
+            "multipart/form-data" : {
               "schema" : {
-                "type" : "object"
+                "type" : "string"
               }
             }
           }
         },
         "responses" : {
           "200" : {
-            "description" : "OK"
+            "description" : "The asset that has been modified/created",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object"
+                }
+              }
+            }
           }
         }
       }
@@ -56,22 +64,21 @@
       }
     },
     "/assets/api/admin/network" : {
-      "put" : {
+      "post" : {
         "tags" : [ "Config Retrieval service" ],
-        "summary" : "Finds Pets by status",
-        "description" : "Multiple status values can be provided with comma separated strings",
+        "summary" : "Create/Modify a Network",
         "requestBody" : {
           "content" : {
-            "application/json" : {
+            "multipart/form-data" : {
               "schema" : {
-                "type" : "object"
+                "type" : "string"
               }
             }
           }
         },
         "responses" : {
           "200" : {
-            "description" : "Successful creation of a request for signature",
+            "description" : "The network that has been modified/created",
             "content" : {
               "application/json" : {
                 "schema" : {
@@ -106,6 +113,34 @@
         "responses" : {
           "200" : {
             "description" : "OK"
+          }
+        }
+      }
+    },
+    "/assets/api/public/assets" : {
+      "post" : {
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SearchRequest"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "All assets given a filter",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "type" : "object"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -149,30 +184,46 @@
       "get" : {
         "responses" : {
           "200" : {
-            "description" : "OK"
-          }
-        }
-      }
-    },
-    "/assets/api/public/networks/{networkId}/assets" : {
-      "get" : {
-        "parameters" : [ {
-          "name" : "networkId",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "OK"
+            "description" : "All the supported networks",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "type" : "object"
+                  }
+                }
+              }
+            }
           }
         }
       }
     }
   },
   "components" : {
-    "schemas" : { }
+    "schemas" : {
+      "SearchRequest" : {
+        "type" : "object",
+        "properties" : {
+          "parent" : {
+            "format" : "uuid",
+            "pattern" : "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}",
+            "type" : "string"
+          },
+          "codecType" : {
+            "type" : "object"
+          },
+          "visibleName" : {
+            "type" : "string"
+          },
+          "symbol" : {
+            "type" : "string"
+          },
+          "contractAddress" : {
+            "type" : "string"
+          }
+        }
+      }
+    }
   }
 }

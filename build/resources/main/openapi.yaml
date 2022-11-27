@@ -1,0 +1,146 @@
+---
+openapi: 3.0.3
+info:
+  title: Asset Library for Crypto Projects
+  contact:
+    name: Ammer Group
+    url: https://ammer.group
+    email: info@ammer.group
+  version: 1.0.0
+servers:
+- url: /assets
+  description: localhost
+tags:
+- name: Config Retrieval service
+  description: Get the value for a certain config
+paths:
+  /assets/api/admin/asset:
+    post:
+      tags:
+      - Config Retrieval service
+      summary: Create/Modify an Asset
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: string
+      responses:
+        "200":
+          description: The asset that has been modified/created
+          content:
+            application/json:
+              schema:
+                type: object
+  /assets/api/admin/assets/{assetId}:
+    delete:
+      tags:
+      - Config Retrieval service
+      parameters:
+      - name: assetId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+  /assets/api/admin/network:
+    post:
+      tags:
+      - Config Retrieval service
+      summary: Create/Modify a Network
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: string
+      responses:
+        "200":
+          description: The network that has been modified/created
+          content:
+            application/json:
+              schema:
+                type: object
+  /assets/api/admin/networks/{networkId}:
+    delete:
+      tags:
+      - Config Retrieval service
+      parameters:
+      - name: networkId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+  /assets/api/openapi:
+    get:
+      responses:
+        "200":
+          description: OK
+  /assets/api/public/assets:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
+      responses:
+        "200":
+          description: All assets given a filter
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+  /assets/api/public/changes:
+    get:
+      parameters:
+      - name: startSequenceNumber
+        in: query
+        schema:
+          format: int64
+          type: integer
+      responses:
+        "200":
+          description: OK
+  /assets/api/public/getSupportedCodecs:
+    get:
+      responses:
+        "200":
+          description: OK
+  /assets/api/public/getSupportedPublicKeys:
+    get:
+      responses:
+        "200":
+          description: OK
+  /assets/api/public/networks:
+    get:
+      responses:
+        "200":
+          description: All the supported networks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+components:
+  schemas:
+    SearchRequest:
+      type: object
+      properties:
+        parent:
+          format: uuid
+          pattern: "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}"
+          type: string
+        codecType:
+          type: object
+        visibleName:
+          type: string
+        symbol:
+          type: string
+        contractAddress:
+          type: string

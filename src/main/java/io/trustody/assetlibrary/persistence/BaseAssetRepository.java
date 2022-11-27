@@ -18,7 +18,6 @@ public class BaseAssetRepository implements AssetRepository<Asset> {
     @Inject
     private EventQueueController eventQueueController;
 
-
     @Override
     public List<Asset> searchRepository(SearchRequest searchRequest) {
         return datastore.find(Asset.class).filter(searchRequest.toFilter()).stream().collect(Collectors.toList());

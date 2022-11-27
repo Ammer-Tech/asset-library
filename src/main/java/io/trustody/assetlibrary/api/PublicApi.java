@@ -43,10 +43,12 @@ public class PublicApi {
     }
 
     @POST
+    @Path("/assets")
     @APIResponse(description = "All assets given a filter",
             responseCode = "200",
             content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = Asset[].class))
     )
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAssets(@RequestBody SearchRequest searchRequest){
         return Response.ok(baseAssetRepository.searchRepository(searchRequest)).build();
@@ -56,7 +58,7 @@ public class PublicApi {
     @Path("/changes")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getChanges(@QueryParam("startSequenceNumber") Long startSequenceNumber){
-        System.out.println("Received request with start number " + startSequenceNumber);
+        log.info("Received request with start number " + startSequenceNumber);
         return Response.ok(eventQueueController.getEvents(startSequenceNumber)).build();
     }
 

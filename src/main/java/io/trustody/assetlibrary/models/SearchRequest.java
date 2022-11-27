@@ -1,6 +1,7 @@
 package io.trustody.assetlibrary.models;
 
 import ammer.tech.commons.blockchain.l2codecs.CodecTypes;
+import com.jsoniter.annotation.JsonIgnore;
 import dev.morphia.query.experimental.filters.Filter;
 import dev.morphia.query.experimental.filters.Filters;
 import lombok.AllArgsConstructor;
@@ -17,17 +18,20 @@ import java.util.UUID;
 @Data
 @Builder(toBuilder = true)
 public class SearchRequest {
-    private UUID networkId;
+    private UUID parent;
     private CodecTypes codecType;
-    private String name;
+    private String visibleName;
+    private String symbol;
     private String contractAddress;
 
+    @JsonIgnore
     public Filter toFilter(){
         List<Filter> filterList = new ArrayList<>(1);
-        if(networkId != null) filterList.add(Filters.eq("parent",networkId));
+        if(parent != null) filterList.add(Filters.eq("parent",parent));
         if(codecType != null) filterList.add(Filters.eq("assetType",codecType));
-        if(name != null) filterList.add(Filters.text(name));
+        if(visibleName != null) filterList.add(Filters.regex("visibleName").pattern("^.*" + visibleName + ".*$"));
         if(contractAddress != null) filterList.add(Filters.eq("address",contractAddress));
+        if(symbol != null) filterList.add(Filters.regex("symbol").pattern("^.*" + symbol + ".*$"));
         return Filters.and(filterList.toArray(Filter[]::new));
     }
 
