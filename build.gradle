@@ -26,7 +26,7 @@ repositories {
 
 ext {
     mqVersion = "2.0.1-RC1"
-    commonsVersion = "2.0.4-RC1"
+    commonsVersion = "2.0.4-RC2"
     mongodbVersion = "4.5.1"
     morphiaVersion = "2.2.6"
     rsApiVersion = "3.0.0"
@@ -45,6 +45,7 @@ ext {
     wixMysqlVersion = "4.6.1"
     lombokVersion="1.18.20"
     jerseyVersion="3.0.2"
+    tomeeCxfVersion = "9.0.0.RC1"
 }
 
 war{
@@ -52,13 +53,27 @@ war{
 }
 
 
+task printSourceSetInformation(){
+
+    doLast{
+        sourceSets.each { srcSet ->
+            println "["+srcSet.name+"]"
+            print "-->Source directories: "+srcSet.allJava.srcDirs+"\n"
+            print "-->Output directories: "+srcSet.output.classesDirs.files+"\n"
+            print "-->Compile classpath:\n"
+            srcSet.compileClasspath.files.each {
+                print "  "+it.path+"\n"
+            }
+            println ""
+        }
+    }
+}
 
 dependencies {
     implementation group: 'jakarta.xml.bind', name: 'jakarta.xml.bind-api', version: "${xmlBindVersion}"
     implementation group: 'javax.validation', name: 'validation-api', version: "${javaxValidationVersion}"
     implementation group: 'mysql', name: 'mysql-connector-java', version: "${mysqlVersion}"
-    implementation 'org.eclipse.microprofile.openapi:microprofile-openapi-api:2.0.0'
-    implementation 'org.projectnessie.smallrye-open-api:org.projectnessie.smallrye-open-api.gradle.plugin:0.2.13'
+    implementation 'org.microprofile-ext.openapi-ext:openapi-ui:2.0.0'
 
     compileOnly group: 'ammer.tech', name: 'commons', version: "${commonsVersion}"
 
@@ -93,7 +108,26 @@ dependencies {
     testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: "${lombokVersion}"
     // https://mvnrepository.com/artifact/de.flapdoodle.embed/de.flapdoodle.embed.mongo
     testImplementation group: 'de.flapdoodle.embed', name: 'de.flapdoodle.embed.mongo', version: '3.4.9'
+    compileOnly "org.apache.tomee:openejb-cxf-rs:${tomeeCxfVersion}"
 }
+
+configurations {
+    localLibs
+    localLibs.transitive = false
+}
+
+task copyToLib(type: Copy) {
+    from configurations.localLibs
+    into "$buildDir/output/lib"
+}
+
+
+generateOpenApiSpec {
+    outputDirectory = new File(this.getProjectDir().toString() + "/src/main/resources/openapi")
+    scanDependenciesDisable = false
+}
+
+
 
 test {
     useJUnitPlatform()

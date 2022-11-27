@@ -1,12 +1,6 @@
 package io.trustody.assetlibrary.startup;
 
-import ammer.tech.commons.ledger.codec.UUIDCodec;
 import ammer.tech.commons.persistence.mongodb.codecs.BigIntegerCodec;
-import com.jsoniter.JsonIterator;
-import com.jsoniter.output.EncodingMode;
-import com.jsoniter.output.JsonStream;
-import com.jsoniter.spi.DecodingMode;
-import com.jsoniter.spi.JsoniterSpi;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.MongoDriverInformation;
@@ -14,6 +8,7 @@ import com.mongodb.client.internal.MongoClientImpl;
 import dev.morphia.Morphia;
 import dev.morphia.mapping.MapperOptions;
 import io.trustody.assetlibrary.configuration.Configuration;
+import io.trustody.assetlibrary.configuration.JsonIterB;
 import jakarta.inject.Inject;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
@@ -23,8 +18,6 @@ import org.bson.UuidRepresentation;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.flywaydb.core.Flyway;
-
-import java.util.UUID;
 
 import static io.trustody.assetlibrary.AssetServer.datastore;
 
@@ -38,12 +31,7 @@ public class AssetServerInitializer implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        JsoniterSpi.registerTypeEncoder(UUID.class, new UUIDCodec());
-        JsoniterSpi.registerTypeDecoder(UUID.class, new UUIDCodec());
-        JsoniterSpi.registerMapKeyDecoder(UUID.class, new UUIDCodec());
-        JsoniterSpi.registerMapKeyEncoder(UUID.class, new UUIDCodec());
-        JsonIterator.setMode(DecodingMode.DYNAMIC_MODE_AND_MATCH_FIELD_WITH_HASH);
-        JsonStream.setMode(EncodingMode.DYNAMIC_MODE);
+        JsonIterB.setup();
         CodecRegistry codecRegistry = CodecRegistries.fromRegistries(
                 com.mongodb.MongoClient.getDefaultCodecRegistry(),
                 CodecRegistries.fromCodecs(new BigIntegerCodec())

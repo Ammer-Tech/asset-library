@@ -2,7 +2,7 @@ package io.trustody.assetlibrary.incremental;
 
 import ammer.tech.commons.configuration.models.StreamConfig;
 import ammer.tech.commons.ledger.events.AssetChangeEvent;
-import ammer.tech.commons.utils.generic.SocketUtils;
+import ammer.tech.commons.utils.SocketUtils;
 import com.blockfeed.messaging.core.api.Protocol;
 import com.blockfeed.messaging.core.extra.simple.DBMessageStorageContainer;
 import com.blockfeed.messaging.core.streaming.publisher.MessageBuffer;

@@ -1,40 +1,50 @@
 package io.trustody.assetlibrary.persistence;
 
-import ammer.tech.commons.blockchain.l2codecs.CodecTypes;
-import ammer.tech.commons.ledger.entities.assets.BaseAsset;
+import ammer.tech.commons.ledger.entities.assets.Asset;
 import ammer.tech.commons.ledger.events.AssetChangeEvent;
 import dev.morphia.query.experimental.filters.Filters;
 import io.trustody.assetlibrary.incremental.EventQueueController;
+import io.trustody.assetlibrary.models.SearchRequest;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.bouncycastle.asn1.DERSequence;
 
 import java.util.List;
-import java.util.UUID;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
-public class BaseAssetRepository implements AssetRepository<BaseAsset> {
+public class BaseAssetRepository implements AssetRepository<Asset> {
 
     @Inject
     private EventQueueController eventQueueController;
+
+
     @Override
-    public List<BaseAsset> listElements(UUID id) {
-        var f = Filters.and(Filters.eq("parent",id),Filters.eq("assetType", CodecTypes.NATIVE));
-        return datastore.find(BaseAsset.class).filter(f).iterator().toList();
+    public List<Asset> searchRepository(SearchRequest searchRequest) {
+        return datastore.find(Asset.class).filter(searchRequest.toFilter()).stream().collect(Collectors.toList());
     }
 
     @Override
-    public List<BaseAsset> listElements() {
+    public List<Asset> listElements() {
         return null;
     }
 
     @Override
-    public BaseAsset upsertElement(BaseAsset element) {
-        if(element.getId() == null) element.setId(UUID.randomUUID());
+    public Asset upsertElement(Asset element) {
+        //There is a corner case, because we are uploading files here - we need to find out what the hell.
+        Asset a = datastore.find(Asset.class).filter(Filters.eq("id",element.getId())).first();
+        if(a != null) {
+            if (element.getGenericLogoUrl() == null && a.getGenericLogoUrl() != null)
+                element.setGenericLogoUrl(a.getGenericLogoUrl());
+            if (element.getIOSLogoUrl() == null && a.getIOSLogoUrl() != null)
+                element.setGenericLogoUrl(a.getIOSLogoUrl());
+            if (element.getAndroidLogoUrl() == null && a.getAndroidLogoUrl() != null)
+                element.setGenericLogoUrl(a.getAndroidLogoUrl());
+        }
         var x = datastore.save(element);
         try {
             eventQueueController.storeChangeEvent(AssetChangeEvent.builder()
-                    .networkChange(false).codecType(CodecTypes.NATIVE)
+                    .networkChange(false).codecType(element.getAssetType())
                     .objectId(element.getId()).deleted(false).changeData(new DERSequence(x.encodeToVector()).getEncoded()).build()
             );
         }
@@ -45,10 +55,10 @@ public class BaseAssetRepository implements AssetRepository<BaseAsset> {
     }
 
     @Override
-    public boolean deleteElement(BaseAsset element) {
+    public boolean deleteElement(Asset element) {
         if(datastore.delete(element).getDeletedCount() == 1){
             eventQueueController.storeChangeEvent(AssetChangeEvent.builder()
-                    .networkChange(false).codecType(CodecTypes.NATIVE)
+                    .networkChange(false).codecType(element.getAssetType())
                     .objectId(element.getId()).deleted(true).changeData(null).build()
             );
             return true;

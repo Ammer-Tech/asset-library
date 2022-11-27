@@ -3,6 +3,7 @@ package io.trustody.assetlibrary.persistence;
 import ammer.tech.commons.ledger.entities.assets.Network;
 import ammer.tech.commons.ledger.events.AssetChangeEvent;
 import io.trustody.assetlibrary.incremental.EventQueueController;
+import io.trustody.assetlibrary.models.SearchRequest;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.bouncycastle.asn1.DERSequence;
@@ -15,8 +16,9 @@ public class NetworkRepository implements AssetRepository<Network> {
 
     @Inject
     private EventQueueController eventQueueController;
+
     @Override
-    public List<Network> listElements(UUID id) {
+    public List<Network> searchRepository(SearchRequest searchRequest) {
         return null;
     }
 
